@@ -18,3 +18,14 @@ python main.py -input sample/input.csv -output output/cleaned.csv
 
 - `-input`：输入 CSV 文件路径（必需）
 - `-output`：输出 CSV 文件路径（必需）
+
+## 示例输出
+
+```
+Original rows: 8
+Rows after cleaning: 6
+Empty rows removed: 1
+Duplicate rows removed: 1
+Missing values filled: 3
+Output file: output/cleaned.csv
+```
