@@ -1,0 +1,7 @@
+id,name,value,category
+1,Alice,100,A
+2,Bob,200,B
+3,Charlie,unknown,C
+5,David,400,D
+6,Eve,unknown,D
+unknown,Frank,600,E
