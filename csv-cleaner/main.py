@@ -14,6 +14,16 @@ def validate_input(input_path: str) -> bool:
     return True
 
 
+def normalize_header(header: str) -> str:
+    """Normalize a single header: trim, lowercase, replace spaces with underscores."""
+    return header.strip().lower().replace(" ", "_")
+
+
+def normalize_headers(headers: list) -> list:
+    """Normalize all headers."""
+    return [normalize_header(h) for h in headers]
+
+
 def read_csv(filepath: str):
     """Read CSV file and return headers and rows."""
     try:
@@ -52,6 +62,8 @@ def main():
     if headers is None:
         return 1
 
+    original_headers = headers
+    headers = normalize_headers(headers)
     print(f"Headers: {headers}")
     print(f"Rows read: {len(rows)}")
     return 0
