@@ -24,6 +24,18 @@ def normalize_headers(headers: list) -> list:
     return [normalize_header(h) for h in headers]
 
 
+def is_empty_row(row: list) -> bool:
+    """Check if a row is empty (all fields empty or whitespace only)."""
+    return all(not field.strip() for field in row)
+
+
+def filter_empty_rows(rows: list) -> tuple:
+    """Filter out empty rows and return (filtered_rows, removed_count)."""
+    filtered = [row for row in rows if not is_empty_row(row)]
+    removed = len(rows) - len(filtered)
+    return filtered, removed
+
+
 def read_csv(filepath: str):
     """Read CSV file and return headers and rows."""
     try:
@@ -64,8 +76,10 @@ def main():
 
     original_headers = headers
     headers = normalize_headers(headers)
+    rows, removed_empty = filter_empty_rows(rows)
     print(f"Headers: {headers}")
     print(f"Rows read: {len(rows)}")
+    print(f"Empty rows removed: {removed_empty}")
     return 0
 
 
