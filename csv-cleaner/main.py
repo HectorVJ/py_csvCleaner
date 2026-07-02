@@ -51,6 +51,17 @@ def deduplicate_rows(rows: list) -> tuple:
     return deduped, removed
 
 
+def fill_missing_values(rows: list, default: str = "unknown") -> tuple:
+    """Fill empty string values with default. Return (filled_rows, filled_count)."""
+    filled = 0
+    result = []
+    for row in rows:
+        new_row = [cell if cell.strip() else default for cell in row]
+        filled += sum(1 for i, cell in enumerate(row) if not cell.strip())
+        result.append(new_row)
+    return result, filled
+
+
 def read_csv(filepath: str):
     """Read CSV file and return headers and rows."""
     try:
@@ -93,10 +104,12 @@ def main():
     headers = normalize_headers(headers)
     rows, removed_empty = filter_empty_rows(rows)
     rows, removed_dup = deduplicate_rows(rows)
+    rows, filled_missing = fill_missing_values(rows)
     print(f"Headers: {headers}")
     print(f"Rows after cleaning: {len(rows)}")
     print(f"Empty rows removed: {removed_empty}")
     print(f"Duplicate rows removed: {removed_dup}")
+    print(f"Missing values filled: {filled_missing}")
     return 0
 
 
