@@ -62,6 +62,19 @@ def fill_missing_values(rows: list, default: str = "unknown") -> tuple:
     return result, filled
 
 
+def normalize_row_lengths(rows: list, header_count: int) -> list:
+    """Ensure all rows have same length as headers, trimming or padding as needed."""
+    normalized = []
+    for row in rows:
+        if len(row) > header_count:
+            normalized.append(row[:header_count])
+        elif len(row) < header_count:
+            normalized.append(row + [""] * (header_count - len(row)))
+        else:
+            normalized.append(row)
+    return normalized
+
+
 def write_csv(filepath: str, headers: list, rows: list):
     """Write headers and rows to CSV file."""
     try:
@@ -117,6 +130,7 @@ def main():
     original_headers = headers
     headers = normalize_headers(headers)
     original_count = len(rows)
+    rows = normalize_row_lengths(rows, len(headers))
     rows, removed_empty = filter_empty_rows(rows)
     rows, removed_dup = deduplicate_rows(rows)
     rows, filled_missing = fill_missing_values(rows)
