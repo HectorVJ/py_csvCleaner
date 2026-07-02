@@ -62,6 +62,20 @@ def fill_missing_values(rows: list, default: str = "unknown") -> tuple:
     return result, filled
 
 
+def write_csv(filepath: str, headers: list, rows: list):
+    """Write headers and rows to CSV file."""
+    try:
+        Path(filepath).parent.mkdir(parents=True, exist_ok=True)
+        with open(filepath, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(headers)
+            writer.writerows(rows)
+        return True
+    except Exception as e:
+        print(f"Error writing CSV: {e}")
+        return False
+
+
 def read_csv(filepath: str):
     """Read CSV file and return headers and rows."""
     try:
@@ -102,14 +116,21 @@ def main():
 
     original_headers = headers
     headers = normalize_headers(headers)
+    original_count = len(rows)
     rows, removed_empty = filter_empty_rows(rows)
     rows, removed_dup = deduplicate_rows(rows)
     rows, filled_missing = fill_missing_values(rows)
+
+    if not write_csv(args.output, headers, rows):
+        return 1
+
+    print(f"Original rows: {original_count}")
     print(f"Headers: {headers}")
     print(f"Rows after cleaning: {len(rows)}")
     print(f"Empty rows removed: {removed_empty}")
     print(f"Duplicate rows removed: {removed_dup}")
     print(f"Missing values filled: {filled_missing}")
+    print(f"Output file: {args.output}")
     return 0
 
 
