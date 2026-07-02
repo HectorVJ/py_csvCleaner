@@ -36,6 +36,21 @@ def filter_empty_rows(rows: list) -> tuple:
     return filtered, removed
 
 
+def deduplicate_rows(rows: list) -> tuple:
+    """Remove duplicate rows, keeping first occurrence. Return (deduped_rows, removed_count)."""
+    seen = set()
+    deduped = []
+    removed = 0
+    for row in rows:
+        row_tuple = tuple(row)
+        if row_tuple not in seen:
+            seen.add(row_tuple)
+            deduped.append(row)
+        else:
+            removed += 1
+    return deduped, removed
+
+
 def read_csv(filepath: str):
     """Read CSV file and return headers and rows."""
     try:
@@ -77,9 +92,11 @@ def main():
     original_headers = headers
     headers = normalize_headers(headers)
     rows, removed_empty = filter_empty_rows(rows)
+    rows, removed_dup = deduplicate_rows(rows)
     print(f"Headers: {headers}")
-    print(f"Rows read: {len(rows)}")
+    print(f"Rows after cleaning: {len(rows)}")
     print(f"Empty rows removed: {removed_empty}")
+    print(f"Duplicate rows removed: {removed_dup}")
     return 0
 
 
